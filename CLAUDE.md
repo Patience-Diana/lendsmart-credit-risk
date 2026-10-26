@@ -31,8 +31,24 @@ portfolio project.
   e.g. `.venv/bin/python`, `.venv/bin/pip`, `.venv/bin/jupyter`, or activate it
   first with `source .venv/bin/activate`.
 - Never use the system Python or install packages globally.
-- **Ask the user before installing any new package**, and explain what it is for.
-  If one is approved, add it to `requirements.txt`.
+
+## Allowed packages
+
+These packages are approved for use in this project:
+
+- `pandas` — loading and cleaning tabular data
+- `numpy` — numerical arrays and math
+- `scikit-learn` — main modeling library (preprocessing, models, metrics)
+- `xgboost` — gradient-boosted tree models
+- `shap` — explaining which features drive a model's predictions
+- `matplotlib` and `seaborn` — charts and plots
+- `jupyter` — running notebooks
+- `fastapi` — serving the model as a simple web API
+
+**Ask the user before installing any package**, including one from this list
+that is not installed yet, and explain what it is for. Packages not on this
+list need the user's approval before they are used at all. When a package is
+installed, add it to `requirements.txt`.
 
 ## Git rules
 

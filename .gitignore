@@ -1,0 +1,15 @@
+# Data and secrets
+data/
+*.csv
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Mac
+.DS_Store
