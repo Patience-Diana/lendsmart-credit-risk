@@ -34,10 +34,6 @@ def load_data(path=DATA_PATH):
     return df
 
 
-# The columns we cap at the 99th percentile (for logistic regression).
-CAP_COLUMNS = ["MonthlyIncome", "DebtRatio"]
-
-
 def clean_data(df):
     """Apply the fixed cleaning rules that are safe to use on all the data.
 
@@ -50,6 +46,8 @@ def clean_data(df):
       where DebtRatio looks like a dollar amount instead of a ratio.
 
     Very old ages and high incomes are kept, because they are real.
+    Capping extreme values is NOT done here: it learns from the data, so it
+    happens inside the logistic regression pipeline (see Capper in models.py).
     """
     # Work on a copy so the original DataFrame passed in is left unchanged.
     df = df.copy()
@@ -62,36 +60,6 @@ def clean_data(df):
     # otherwise we'd lose track of which ones were blank.
     df["income_missing"] = df["MonthlyIncome"].isna().astype(int)
 
-    return df
-
-
-def fit_caps(train_df):
-    """Work out the 99th-percentile cap for each column in CAP_COLUMNS.
-
-    Only pass the TRAINING data here. If we used all the data, the caps
-    would "see" the test rows, which is leakage.
-    Returns a dictionary like {"MonthlyIncome": 25000.0, "DebtRatio": 4979.0}.
-    """
-    caps = {}
-    for column in CAP_COLUMNS:
-        # quantile(0.99) is the value that 99% of rows are at or below.
-        # Blank values are skipped automatically.
-        caps[column] = train_df[column].quantile(0.99)
-    return caps
-
-
-def apply_caps(df, caps):
-    """Cap each column at the given limit (values above it become the limit).
-
-    Use the caps from fit_caps(train_df) on train, validation and test alike.
-    This is for logistic regression, which is thrown off by extreme values.
-    XGBoost can use the uncapped data.
-    """
-    df = df.copy()
-    for column, cap in caps.items():
-        # clip(upper=cap) replaces anything bigger than cap with cap.
-        # Blank values stay blank; they get filled in later in the model pipeline.
-        df[column] = df[column].clip(upper=cap)
     return df
 
 
