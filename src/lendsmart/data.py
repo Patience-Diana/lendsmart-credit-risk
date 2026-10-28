@@ -3,9 +3,19 @@
 # pandas is the library we use to work with tables of data (called DataFrames).
 import pandas as pd
 
+# train_test_split is scikit-learn's tool for randomly dividing data into parts.
+from sklearn.model_selection import train_test_split
+
 # The path to the data file comes from config.py, where all paths live.
 # Because it's a full path, load_data() works no matter where you run it from.
 from lendsmart.config import DATA_PATH
+
+# The column we want to predict: 1 = defaulted, 0 = did not.
+TARGET = "SeriousDlqin2yrs"
+
+# A fixed "seed" for the random split. Using the same number every time
+# means the split comes out exactly the same on every run and every computer.
+RANDOM_STATE = 42
 
 
 def load_data(path=DATA_PATH):
@@ -83,3 +93,33 @@ def apply_caps(df, caps):
         # Blank values stay blank; they get filled in later in the model pipeline.
         df[column] = df[column].clip(upper=cap)
     return df
+
+
+def split_data(df):
+    """Split the data into three parts: 60% train, 20% validation, 20% test.
+
+    - train: the models learn from this.
+    - validation: used to compare the two models and choose the approval cutoff.
+    - test: used ONCE at the very end, for an honest final score.
+
+    Returns three DataFrames: train, val, test.
+    """
+    # Remove exact duplicate rows first. Otherwise the same borrower could
+    # end up in both train and test, and the model would be "tested" on a row
+    # it already learned from, which makes the score look better than it is.
+    df = df.drop_duplicates()
+
+    # First cut: take 20% of the rows away as the test set.
+    # stratify=df[TARGET] keeps the default rate (about 6.7%) the same in
+    # both parts, so neither part ends up with unusually many or few defaults.
+    rest, test = train_test_split(
+        df, test_size=0.20, stratify=df[TARGET], random_state=RANDOM_STATE
+    )
+
+    # Second cut: split the remaining 80% into train and validation.
+    # 0.25 of the remaining 80% is 20% of the original data.
+    train, val = train_test_split(
+        rest, test_size=0.25, stratify=rest[TARGET], random_state=RANDOM_STATE
+    )
+
+    return train, val, test
