@@ -11,7 +11,7 @@ After just one late payment, that rate jumps to 15.0%, nearly four times higher.
 rising with each late payment: 26.5% at two, 35.2% at three, and 44.6% at four or more.
 How someone has handled payments before is the strongest signal we've seen so far.
 
-![Default rate by number of times 30-59 days late](reports/default_rate_by_30_59_days_late.png)
+![Default rate by number of times 30-59 days late](reports/figures/default_rate_by_30_59_days_late.png)
 
 ## 2. Younger borrowers default more often
 
@@ -20,7 +20,7 @@ for those aged 60 and over. Age helps predict risk, but lenders generally may no
 people differently because of their age. So the model is checked for fairness across
 age groups before any approval cutoff is trusted.
 
-![Default rate by age band](reports/default_rate_by_age_band.png)
+![Default rate by age band](reports/figures/default_rate_by_age_band.png)
 
 ## 3. Missing income is not a red flag, but it distorts the debt numbers
 

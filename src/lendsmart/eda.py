@@ -8,14 +8,14 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
+# Paths come from config.py, where all paths live.
+from lendsmart.config import FIGURES_DIR, PROJECT_ROOT
+
 # Reuse the loader we already wrote, so the data is read the same way everywhere.
-from src.data import PROJECT_ROOT, clean_data, load_data
+from lendsmart.data import clean_data, load_data
 
 # The name of the column we want to predict: 1 = defaulted, 0 = did not.
 TARGET = "SeriousDlqin2yrs"
-
-# Where the charts are saved.
-REPORTS_DIR = PROJECT_ROOT / "reports"
 
 # Chart colors: one blue for the bars, gray for text and gridlines.
 BAR_COLOR = "#2a78d6"
@@ -132,13 +132,13 @@ def check_outliers(df):
 
 
 def bar_chart(rates, title, xlabel, file_name):
-    """Draw a bar chart of default rates and save it as a PNG in reports/.
+    """Draw a bar chart of default rates and save it as a PNG in reports/figures/.
 
     rates is a pandas Series: the index holds the group names (e.g. "18-29")
     and the values hold the default rate for each group (e.g. 0.117).
     """
-    # Make the reports/ folder if it doesn't exist yet.
-    REPORTS_DIR.mkdir(exist_ok=True)
+    # Make the reports/figures/ folder if it doesn't exist yet.
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
     # Turn rates like 0.117 into percentages like 11.7, which are easier to read.
     percents = rates * 100
@@ -168,7 +168,7 @@ def bar_chart(rates, title, xlabel, file_name):
     ax.tick_params(colors=TEXT_COLOR, length=0)
 
     # Save the image and close it to free up memory.
-    path = REPORTS_DIR / file_name
+    path = FIGURES_DIR / file_name
     fig.tight_layout()
     fig.savefig(path, dpi=150)
     plt.close(fig)
@@ -176,7 +176,7 @@ def bar_chart(rates, title, xlabel, file_name):
 
 
 def make_charts(df):
-    """Save two charts to reports/: default rate by age band and by 30-59 days late count.
+    """Save two charts to reports/figures/: default rate by age band and by 30-59 days late count.
 
     Pass in cleaned data (from clean_data), so the impossible age-0 row is gone.
     """
@@ -224,7 +224,7 @@ def make_charts(df):
 
 # This block only runs when you run the file directly, not when you import it.
 # Run it from the main project folder with:
-#   .venv/bin/python -m src.eda
+#   .venv/bin/python -m lendsmart.eda
 if __name__ == "__main__":
     data = load_data()
     overview(data)

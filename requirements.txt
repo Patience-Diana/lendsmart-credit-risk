@@ -6,3 +6,4 @@ seaborn
 xgboost
 shap
 jupyter
+wheel

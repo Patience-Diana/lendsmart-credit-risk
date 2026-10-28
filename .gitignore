@@ -3,10 +3,14 @@ data/
 *.csv
 .env
 
+# Saved models (large binary files)
+models/
+
 # Python
 .venv/
 __pycache__/
 *.pyc
+*.egg-info/
 
 # Notebooks
 .ipynb_checkpoints/
