@@ -1,0 +1,32 @@
+# pyproject.toml describes this project to Python's packaging tools.
+# Installing it with `pip install -e .` makes `import lendsmart` work from
+# anywhere: notebooks, scripts, tests, and later the API and Docker image.
+
+# How to build the package: with setuptools, the standard Python build tool.
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+# Basic facts about the project.
+[project]
+name = "lendsmart"
+version = "0.1.0"
+description = "Loan default risk scoring tool (data science portfolio project)"
+requires-python = ">=3.10"
+# The libraries the lendsmart code itself imports.
+# Tools like jupyter and pytest are listed in requirements.txt instead.
+dependencies = [
+    "pandas",
+    "numpy",
+    "scikit-learn",
+    "xgboost",
+    "shap",
+    "matplotlib",
+    "seaborn",
+]
+
+# Tell setuptools the code lives in src/ (this is called the "src layout").
+# It means you can only import lendsmart after installing it, which catches
+# mistakes where code accidentally depends on the folder you run it from.
+[tool.setuptools.packages.find]
+where = ["src"]

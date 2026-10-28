@@ -1,20 +1,11 @@
 """Functions for loading the LendSmart loan data."""
 
-# Path helps us build file paths that work on any computer (Mac, Windows, Linux).
-from pathlib import Path
-
 # pandas is the library we use to work with tables of data (called DataFrames).
 import pandas as pd
 
-# Find the project's main folder.
-# __file__ is this file (src/data.py), .parent is the src/ folder,
-# and .parent again is the main LENDSMART/ folder.
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-
-# The full path to the data file, built from the main folder.
-# Building it this way means load_data() works no matter where you run it from,
-# for example from inside notebooks/ or from the main folder.
-DATA_PATH = PROJECT_ROOT / "data" / "cs-training.csv"
+# The path to the data file comes from config.py, where all paths live.
+# Because it's a full path, load_data() works no matter where you run it from.
+from lendsmart.config import DATA_PATH
 
 
 def load_data(path=DATA_PATH):
