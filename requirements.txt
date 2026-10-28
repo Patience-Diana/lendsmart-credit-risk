@@ -7,3 +7,4 @@ xgboost
 shap
 jupyter
 wheel
+pytest
