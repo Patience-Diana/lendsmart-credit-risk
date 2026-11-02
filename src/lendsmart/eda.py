@@ -131,11 +131,24 @@ def check_outliers(df):
     print("  and cap DebtRatio at the 99th percentile for logistic regression.")
 
 
-def bar_chart(rates, title, xlabel, file_name):
-    """Draw a bar chart of default rates and save it as a PNG in reports/figures/.
+def age_band(ages):
+    """Sort each age into a band: 18-29, 30-44, 45-59 or 60+.
+
+    Used by the EDA chart and the fairness check, so both use the same bands.
+    """
+    # pd.cut puts each value into a range. The edges mean: 18-29, 30-44, 45-59, 60+.
+    return pd.cut(
+        ages,
+        bins=[17, 29, 44, 59, 200],
+        labels=["18-29", "30-44", "45-59", "60+"],
+    )
+
+
+def bar_chart(rates, title, xlabel, file_name, ylabel="Default rate (%)"):
+    """Draw a bar chart of rates and save it as a PNG in reports/figures/.
 
     rates is a pandas Series: the index holds the group names (e.g. "18-29")
-    and the values hold the default rate for each group (e.g. 0.117).
+    and the values hold a rate for each group (e.g. 0.117).
     """
     # Make the reports/figures/ folder if it doesn't exist yet.
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
@@ -158,7 +171,7 @@ def bar_chart(rates, title, xlabel, file_name):
     # Titles and axis labels.
     ax.set_title(title, loc="left", fontsize=13, color="#0b0b0b")
     ax.set_xlabel(xlabel, color=TEXT_COLOR)
-    ax.set_ylabel("Default rate (%)", color=TEXT_COLOR)
+    ax.set_ylabel(ylabel, color=TEXT_COLOR)
 
     # Make the frame and gridlines light, so the bars stand out.
     ax.spines[["top", "right", "left"]].set_visible(False)
@@ -183,15 +196,9 @@ def make_charts(df):
     # --- Chart 1: default rate by age band ---
     # Takeaway: default risk falls steadily with age, and 18-29 year olds default
     # almost 4 times as often as people aged 60+ (about 11.7% vs 3.1%).
-    # pd.cut sorts each age into a band. The edges mean: 18-29, 30-44, 45-59, 60+.
-    age_band = pd.cut(
-        df["age"],
-        bins=[17, 29, 44, 59, 200],
-        labels=["18-29", "30-44", "45-59", "60+"],
-    )
-    # groupby puts rows in the same band together; mean() of the 0/1 target
+    # groupby puts rows in the same age band together; mean() of the 0/1 target
     # gives the share who defaulted in each band.
-    rates_by_age = df.groupby(age_band, observed=True)[TARGET].mean()
+    rates_by_age = df.groupby(age_band(df["age"]), observed=True)[TARGET].mean()
     bar_chart(
         rates_by_age,
         title="Younger borrowers default more often",
