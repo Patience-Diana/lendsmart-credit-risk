@@ -1,0 +1,11 @@
+{
+  "model": "xgboost",
+  "cutoff": 0.14,
+  "test_rows": 29878,
+  "roc_auc": 0.8669022450501143,
+  "pr_auc": 0.41322857662641727,
+  "approval_rate": 0.8755940826025839,
+  "default_rate_among_approved": 0.02928022629104392,
+  "total_cost": 6311,
+  "cost_if_approve_everyone": 10010
+}
