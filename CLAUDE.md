@@ -74,9 +74,8 @@ These packages are approved for use in this project:
 - `fastapi` — serving the model as a simple web API
 - `uvicorn` — running the FastAPI app
 - `pytest` — running the tests in `tests/`
-
-Planned for later steps, not yet approved: `sqlalchemy` and `psycopg` (talking
-to Postgres from Python).
+- `sqlalchemy` — connecting to Postgres from Python (used by pandas `to_sql`/`read_sql`)
+- `psycopg` — the driver that speaks Postgres's network protocol
 
 **Ask the user before installing any package**, including one from this list
 that is not installed yet, and explain what it is for. Packages not on this

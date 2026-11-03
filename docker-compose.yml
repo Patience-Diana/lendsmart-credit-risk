@@ -1,0 +1,40 @@
+# docker-compose.yml describes the containers this project needs.
+#   Start them:  docker compose up -d
+#   Stop them:   docker compose down
+# Values like ${POSTGRES_USER} are read from the .env file in this folder.
+
+services:
+  # The database. "db" is its name inside Compose.
+  db:
+    # The image (recipe) to run: PostgreSQL version 17.
+    image: postgres:17
+    # A fixed, readable name for the container (shown by `docker ps`).
+    container_name: lendsmart-db
+    # Settings passed into the container. The postgres image uses these
+    # on first start to create the user, password and database.
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    # Port mapping, "Mac port : container port".
+    # Postgres listens on 5432 inside the container; we reach it on 5434.
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    # Keep the database files in a named volume, outside the container,
+    # so the data survives when the container is stopped or deleted.
+    volumes:
+      - lendsmart_pgdata:/var/lib/postgresql/data
+    # Every 5 seconds, ask Postgres "are you ready?" so Docker can report
+    # whether the database is actually healthy, not just started.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    # If the container crashes, or the Mac restarts, start it again
+    # (unless you stopped it yourself with `docker compose down`/`stop`).
+    restart: unless-stopped
+
+# Named volumes used above. Docker creates and manages the storage.
+volumes:
+  lendsmart_pgdata:
