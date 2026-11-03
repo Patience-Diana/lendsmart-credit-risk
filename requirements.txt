@@ -8,3 +8,5 @@ shap
 jupyter
 wheel
 pytest
+sqlalchemy
+psycopg[binary]
