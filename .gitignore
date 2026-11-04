@@ -17,3 +17,6 @@ __pycache__/
 
 # Mac
 .DS_Store
+
+# Downloaded Linux package files for the Docker build (large, re-downloadable)
+wheels/

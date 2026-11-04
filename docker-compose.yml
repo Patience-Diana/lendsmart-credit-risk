@@ -35,6 +35,30 @@ services:
     # (unless you stopped it yourself with `docker compose down`/`stop`).
     restart: unless-stopped
 
+  # The API. Built from the Dockerfile in this folder.
+  api:
+    # "build: ." means: build the image from ./Dockerfile instead of downloading one.
+    build: .
+    container_name: lendsmart-api
+    # Settings for connecting to the database, passed in as environment variables
+    # (the image has no .env file). Inside Compose's private network, containers
+    # find each other by service name, so the database's host is "db", and its
+    # port is Postgres's own 5432, not the 5434 we use from the Mac.
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+    # Mac port 8000 -> the API's port 8000 inside the container.
+    ports:
+      - "8000:8000"
+    # Don't start the API until the database's healthcheck says it's ready.
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
 # Named volumes used above. Docker creates and manages the storage.
 volumes:
   lendsmart_pgdata:

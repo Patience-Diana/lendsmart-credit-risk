@@ -12,9 +12,15 @@ import os
 from pathlib import Path
 
 # Find the project's main folder.
-# __file__ is this file (src/lendsmart/config.py). Each .parent goes up one folder:
-# lendsmart/ -> src/ -> the main project folder.
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+# By default: __file__ is this file (src/lendsmart/config.py), and each .parent
+# goes up one folder: lendsmart/ -> src/ -> the main project folder.
+# That only works when the code stays inside the project (the editable install
+# in .venv). In the Docker image the package is copied into Python's own folder,
+# so the Dockerfile sets the LENDSMART_ROOT environment variable to say where
+# the project files (models/, reports/) are instead.
+PROJECT_ROOT = Path(
+    os.environ.get("LENDSMART_ROOT", Path(__file__).resolve().parent.parent.parent)
+)
 
 # Raw data. The data/ folder is ignored by git, so it never gets committed.
 DATA_DIR = PROJECT_ROOT / "data"

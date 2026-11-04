@@ -1,0 +1,20 @@
+# Packages the API needs inside its Docker image, with EXACT versions.
+#
+# The saved model (models/xgboost.joblib) was made with these versions of
+# scikit-learn and xgboost. A saved model may not load correctly under other
+# versions, so they are pinned here with "==" to match the .venv exactly.
+#
+# If you upgrade a package in .venv, retrain the model and update this file too.
+pandas==2.3.3
+numpy==2.2.6
+scipy==1.15.3
+scikit-learn==1.7.2
+joblib==1.6.0
+# xgboost-cpu is the same xgboost (same version, same "import xgboost"), but
+# without the 350 MB of NVIDIA GPU libraries the normal Linux package pulls in.
+# The API only runs on CPU, so it does not need them.
+xgboost-cpu==3.2.0
+sqlalchemy==2.0.55
+psycopg[binary]==3.3.7
+fastapi==0.162.0
+uvicorn==0.54.0
