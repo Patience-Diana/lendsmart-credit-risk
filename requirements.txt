@@ -10,3 +10,5 @@ wheel
 pytest
 sqlalchemy
 psycopg[binary]
+fastapi
+uvicorn

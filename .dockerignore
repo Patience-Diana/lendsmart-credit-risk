@@ -1,0 +1,25 @@
+# .dockerignore: files Docker must NOT send into the image build.
+# Like .gitignore, but for Docker. It keeps the image small and keeps
+# secrets and data out of it.
+
+# Secrets: settings are passed in by docker-compose.yml instead.
+.env
+
+# Data: the API doesn't need the training data.
+data/
+
+# The local virtual environment (the image installs its own packages).
+.venv/
+
+# Git history, editor settings, caches and build leftovers.
+.git/
+.vscode/
+**/__pycache__/
+**/*.pyc
+**/*.egg-info/
+.pytest_cache/
+
+# Things the API doesn't use.
+notebooks/
+tests/
+scripts/
